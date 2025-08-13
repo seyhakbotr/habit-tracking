@@ -23,21 +23,24 @@ class OnboardingScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // 💡 Updated text for habit tracking
             Text(
-              'Track your time.\nBecause time counts.',
+              'Build your habits.\nBecause consistency counts.',
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
             gapH16,
+            // 💡 Updated image and semantics for habit tracking
             SvgPicture.asset(
               'assets/time-tracking.svg',
               width: 200,
               height: 200,
-              semanticsLabel: 'Time tracking logo',
+              semanticsLabel: 'Habit tracking logo',
             ),
             gapH16,
             PrimaryButton(
-              text: 'Get Started'.hardcoded,
+              // 💡 Updated button text
+              text: 'Start Building Habits'.hardcoded,
               isLoading: state.isLoading,
               onPressed: state.isLoading
                   ? null
