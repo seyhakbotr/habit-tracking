@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:starter_architecture_flutter_firebase/src/constants/app_sizes.dart';
 import 'package:starter_architecture_flutter_firebase/src/utils/format.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/entry.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/domain/job.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/domain/habit.dart';
 
 class EntryListItem extends StatelessWidget {
   const EntryListItem({
     super.key,
     required this.entry,
-    required this.job,
+    required this.habit,
     this.onTap,
   });
 
   final Entry entry;
-  final Job job;
+  final Habit habit;
   final VoidCallback? onTap;
 
   @override
@@ -44,9 +44,6 @@ class EntryListItem extends StatelessWidget {
     final endTime = TimeOfDay.fromDateTime(entry.end).format(context);
     final durationFormatted = Format.hours(entry.durationInHours);
 
-    final pay = job.ratePerHour * entry.durationInHours;
-    final payFormatted = Format.currency(pay);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -55,13 +52,11 @@ class EntryListItem extends StatelessWidget {
               style: const TextStyle(fontSize: 18.0, color: Colors.grey)),
           gapW16,
           Text(startDate, style: const TextStyle(fontSize: 18.0)),
-          if (job.ratePerHour > 0.0) ...<Widget>[
-            Expanded(child: Container()),
-            Text(
-              payFormatted,
-              style: TextStyle(fontSize: 16.0, color: Colors.green[700]),
-            ),
-          ],
+          Expanded(child: Container()),
+          Text(
+            habit.name,
+            style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
         ]),
         Row(children: <Widget>[
           Text('$startTime - $endTime', style: const TextStyle(fontSize: 16.0)),
@@ -80,19 +75,19 @@ class EntryListItem extends StatelessWidget {
   }
 }
 
-class DismissibleEntryListItem extends StatelessWidget {
-  const DismissibleEntryListItem({
+class DismissibleEntryHabitListItem extends StatelessWidget {
+  const DismissibleEntryHabitListItem({
     super.key,
     required this.dismissibleKey,
     required this.entry,
-    required this.job,
+    required this.habit,
     this.onDismissed,
     this.onTap,
   });
 
   final Key dismissibleKey;
   final Entry entry;
-  final Job job;
+  final Habit habit;
   final VoidCallback? onDismissed;
   final VoidCallback? onTap;
 
@@ -105,7 +100,7 @@ class DismissibleEntryListItem extends StatelessWidget {
       onDismissed: (direction) => onDismissed?.call(),
       child: EntryListItem(
         entry: entry,
-        job: job,
+        habit: habit,
         onTap: onTap,
       ),
     );

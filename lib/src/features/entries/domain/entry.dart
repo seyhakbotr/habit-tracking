@@ -1,13 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/habits/domain/habit.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/domain/job.dart';
 
 typedef EntryID = String;
 
 class Entry extends Equatable {
   const Entry({
     required this.id,
-    required this.jobId,
     required this.habitId,
     required this.start,
     required this.end,
@@ -15,13 +13,12 @@ class Entry extends Equatable {
   });
   final EntryID id;
   final HabitID habitId;
-  final JobID jobId;
   final DateTime start;
   final DateTime end;
   final String comment;
 
   @override
-  List<Object> get props => [id, jobId, start, end, comment];
+  List<Object> get props => [id, habitId, start, end, comment];
 
   @override
   bool get stringify => true;
@@ -34,7 +31,6 @@ class Entry extends Equatable {
     final endMilliseconds = value['end'] as int;
     return Entry(
       id: id,
-      jobId: value['jobId'] as String,
       habitId: value['habitId'] as String,
       start: DateTime.fromMillisecondsSinceEpoch(startMilliseconds),
       end: DateTime.fromMillisecondsSinceEpoch(endMilliseconds),
@@ -45,7 +41,6 @@ class Entry extends Equatable {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'habitId': habitId,
-      'jobId': jobId,
       'start': start.millisecondsSinceEpoch,
       'end': end.millisecondsSinceEpoch,
       'comment': comment,

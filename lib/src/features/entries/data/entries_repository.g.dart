@@ -24,7 +24,7 @@ final entriesRepositoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef EntriesRepositoryRef = AutoDisposeProviderRef<EntriesRepository>;
-String _$jobEntriesQueryHash() => r'b6028feba070a55b2cf62b18cb3849cefecd27ab';
+String _$habitEntriesQueryHash() => r'947499982e2b1fe73200d2badade56c128d1e0a0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -47,30 +47,30 @@ class _SystemHash {
   }
 }
 
-/// See also [jobEntriesQuery].
-@ProviderFor(jobEntriesQuery)
-const jobEntriesQueryProvider = JobEntriesQueryFamily();
+/// See also [habitEntriesQuery].
+@ProviderFor(habitEntriesQuery)
+const habitEntriesQueryProvider = HabitEntriesQueryFamily();
 
-/// See also [jobEntriesQuery].
-class JobEntriesQueryFamily extends Family<Query<Entry>> {
-  /// See also [jobEntriesQuery].
-  const JobEntriesQueryFamily();
+/// See also [habitEntriesQuery].
+class HabitEntriesQueryFamily extends Family<Query<Entry>> {
+  /// See also [habitEntriesQuery].
+  const HabitEntriesQueryFamily();
 
-  /// See also [jobEntriesQuery].
-  JobEntriesQueryProvider call(
-    String jobId,
+  /// See also [habitEntriesQuery].
+  HabitEntriesQueryProvider call(
+    String habitId,
   ) {
-    return JobEntriesQueryProvider(
-      jobId,
+    return HabitEntriesQueryProvider(
+      habitId,
     );
   }
 
   @override
-  JobEntriesQueryProvider getProviderOverride(
-    covariant JobEntriesQueryProvider provider,
+  HabitEntriesQueryProvider getProviderOverride(
+    covariant HabitEntriesQueryProvider provider,
   ) {
     return call(
-      provider.jobId,
+      provider.habitId,
     );
   }
 
@@ -86,75 +86,75 @@ class JobEntriesQueryFamily extends Family<Query<Entry>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'jobEntriesQueryProvider';
+  String? get name => r'habitEntriesQueryProvider';
 }
 
-/// See also [jobEntriesQuery].
-class JobEntriesQueryProvider extends AutoDisposeProvider<Query<Entry>> {
-  /// See also [jobEntriesQuery].
-  JobEntriesQueryProvider(
-    String jobId,
+/// See also [habitEntriesQuery].
+class HabitEntriesQueryProvider extends AutoDisposeProvider<Query<Entry>> {
+  /// See also [habitEntriesQuery].
+  HabitEntriesQueryProvider(
+    String habitId,
   ) : this._internal(
-          (ref) => jobEntriesQuery(
-            ref as JobEntriesQueryRef,
-            jobId,
+          (ref) => habitEntriesQuery(
+            ref as HabitEntriesQueryRef,
+            habitId,
           ),
-          from: jobEntriesQueryProvider,
-          name: r'jobEntriesQueryProvider',
+          from: habitEntriesQueryProvider,
+          name: r'habitEntriesQueryProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$jobEntriesQueryHash,
-          dependencies: JobEntriesQueryFamily._dependencies,
+                  : _$habitEntriesQueryHash,
+          dependencies: HabitEntriesQueryFamily._dependencies,
           allTransitiveDependencies:
-              JobEntriesQueryFamily._allTransitiveDependencies,
-          jobId: jobId,
+              HabitEntriesQueryFamily._allTransitiveDependencies,
+          habitId: habitId,
         );
 
-  JobEntriesQueryProvider._internal(
+  HabitEntriesQueryProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.jobId,
+    required this.habitId,
   }) : super.internal();
 
-  final String jobId;
+  final String habitId;
 
   @override
   Override overrideWith(
-    Query<Entry> Function(JobEntriesQueryRef provider) create,
+    Query<Entry> Function(HabitEntriesQueryRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: JobEntriesQueryProvider._internal(
-        (ref) => create(ref as JobEntriesQueryRef),
+      override: HabitEntriesQueryProvider._internal(
+        (ref) => create(ref as HabitEntriesQueryRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        jobId: jobId,
+        habitId: habitId,
       ),
     );
   }
 
   @override
   AutoDisposeProviderElement<Query<Entry>> createElement() {
-    return _JobEntriesQueryProviderElement(this);
+    return _HabitEntriesQueryProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is JobEntriesQueryProvider && other.jobId == jobId;
+    return other is HabitEntriesQueryProvider && other.habitId == habitId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, jobId.hashCode);
+    hash = _SystemHash.combine(hash, habitId.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -162,17 +162,17 @@ class JobEntriesQueryProvider extends AutoDisposeProvider<Query<Entry>> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin JobEntriesQueryRef on AutoDisposeProviderRef<Query<Entry>> {
-  /// The parameter `jobId` of this provider.
-  String get jobId;
+mixin HabitEntriesQueryRef on AutoDisposeProviderRef<Query<Entry>> {
+  /// The parameter `habitId` of this provider.
+  String get habitId;
 }
 
-class _JobEntriesQueryProviderElement
-    extends AutoDisposeProviderElement<Query<Entry>> with JobEntriesQueryRef {
-  _JobEntriesQueryProviderElement(super.provider);
+class _HabitEntriesQueryProviderElement
+    extends AutoDisposeProviderElement<Query<Entry>> with HabitEntriesQueryRef {
+  _HabitEntriesQueryProviderElement(super.provider);
 
   @override
-  String get jobId => (origin as JobEntriesQueryProvider).jobId;
+  String get habitId => (origin as HabitEntriesQueryProvider).habitId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

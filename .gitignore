@@ -104,3 +104,5 @@ android/app/google-services.json
 
 # Firebase hosting
 .firebase/
+
+.env

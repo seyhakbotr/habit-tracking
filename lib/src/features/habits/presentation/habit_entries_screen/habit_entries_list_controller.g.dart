@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'job_entries_list_controller.dart';
+part of 'habit_entries_list_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$jobsEntriesListControllerHash() =>
-    r'f9a08b66a0c962d210a09aebb711d38acb354b1e';
+String _$habitsEntriesListControllerHash() =>
+    r'68ce2d414e6440cece8506971404bdb0cac20ebb';
 
-/// See also [JobsEntriesListController].
-@ProviderFor(JobsEntriesListController)
-final jobsEntriesListControllerProvider =
-    AutoDisposeAsyncNotifierProvider<JobsEntriesListController, void>.internal(
-  JobsEntriesListController.new,
-  name: r'jobsEntriesListControllerProvider',
+/// See also [HabitsEntriesListController].
+@ProviderFor(HabitsEntriesListController)
+final habitsEntriesListControllerProvider = AutoDisposeAsyncNotifierProvider<
+    HabitsEntriesListController, void>.internal(
+  HabitsEntriesListController.new,
+  name: r'habitsEntriesListControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$jobsEntriesListControllerHash,
+      : _$habitsEntriesListControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$JobsEntriesListController = AutoDisposeAsyncNotifier<void>;
+typedef _$HabitsEntriesListController = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

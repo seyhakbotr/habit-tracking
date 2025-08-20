@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/authentication/data/firebase_auth_repository.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/data/entries_repository.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/entry.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/domain/job.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/domain/habit.dart';
 
 part 'entry_screen_controller.g.dart';
 
@@ -17,7 +17,7 @@ class EntryScreenController extends _$EntryScreenController {
 
   Future<bool> submit({
     EntryID? entryId,
-    required JobID jobId,
+    required HabitID habitId,
     required DateTime start,
     required DateTime end,
     required String comment,
@@ -31,7 +31,7 @@ class EntryScreenController extends _$EntryScreenController {
     if (entryId == null) {
       state = await AsyncValue.guard(() => repository.addEntry(
             uid: currentUser.uid,
-            jobId: jobId,
+            habitId: habitId,
             start: start,
             end: end,
             comment: comment,
@@ -39,7 +39,7 @@ class EntryScreenController extends _$EntryScreenController {
     } else {
       final entry = Entry(
         id: entryId,
-        jobId: jobId,
+        habitId: habitId,
         start: start,
         end: end,
         comment: comment,

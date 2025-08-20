@@ -4,36 +4,36 @@ import 'package:rxdart/rxdart.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/authentication/data/firebase_auth_repository.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/authentication/domain/app_user.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/data/entries_repository.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/daily_jobs_details.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/daily_habits_details.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/entries_list_tile_model.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/entry_job.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/data/jobs_repository.dart';
-import 'package:starter_architecture_flutter_firebase/src/utils/format.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/entry.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/domain/job.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/entry_habit.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/data/habit_repository.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/domain/habit.dart';
+import 'package:starter_architecture_flutter_firebase/src/utils/format.dart';
 
 part 'entries_service.g.dart';
 
 // TODO: Clean up this code a bit more
 class EntriesService {
   EntriesService(
-      {required this.jobsRepository, required this.entriesRepository});
-  final JobsRepository jobsRepository;
+      {required this.habitsRepository, required this.entriesRepository});
+  final HabitsRepository habitsRepository;
   final EntriesRepository entriesRepository;
 
-  /// combine List<Job>, List<Entry> into List<EntryJob>
-  Stream<List<EntryJob>> _allEntriesStream(UserID uid) =>
+  /// combine List<Habit>, List<Entry> into List<EntryHabit>
+  Stream<List<EntryHabit>> _allEntriesStream(UserID uid) =>
       CombineLatestStream.combine2(
         entriesRepository.watchEntries(uid: uid),
-        jobsRepository.watchJobs(uid: uid),
-        _entriesJobsCombiner,
+        habitsRepository.watchHabits(uid: uid),
+        _entriesHabitsCombiner,
       );
 
-  static List<EntryJob> _entriesJobsCombiner(
-      List<Entry> entries, List<Job> jobs) {
+  static List<EntryHabit> _entriesHabitsCombiner(
+      List<Entry> entries, List<Habit> habits) {
     return entries.map((entry) {
-      final job = jobs.firstWhere((job) => job.id == entry.jobId);
-      return EntryJob(entry, job);
+      final habit = habits.firstWhere((habit) => habit.id == entry.habitId);
+      return EntryHabit(entry, habit);
     }).toList();
   }
 
@@ -41,40 +41,35 @@ class EntriesService {
   Stream<List<EntriesListTileModel>> entriesTileModelStream(UserID uid) =>
       _allEntriesStream(uid).map(_createModels);
 
-  static List<EntriesListTileModel> _createModels(List<EntryJob> allEntries) {
+  static List<EntriesListTileModel> _createModels(List<EntryHabit> allEntries) {
     if (allEntries.isEmpty) {
       return [];
     }
-    final allDailyJobsDetails = DailyJobsDetails.all(allEntries);
+    final allDailyHabitsDetails = DailyHabitsDetails.all(allEntries);
 
-    // total duration across all jobs
-    final totalDuration = allDailyJobsDetails
-        .map((dateJobsDuration) => dateJobsDuration.duration)
-        .reduce((value, element) => value + element);
-
-    // total pay across all jobs
-    final totalPay = allDailyJobsDetails
-        .map((dateJobsDuration) => dateJobsDuration.pay)
+    // total duration across all habits
+    final totalDuration = allDailyHabitsDetails
+        .map((dateHabitsDuration) => dateHabitsDuration.duration)
         .reduce((value, element) => value + element);
 
     return <EntriesListTileModel>[
       EntriesListTileModel(
         leadingText: 'All Entries',
-        middleText: Format.currency(totalPay),
+        middleText: '',
         trailingText: Format.hours(totalDuration),
       ),
-      for (DailyJobsDetails dailyJobsDetails in allDailyJobsDetails) ...[
+      for (DailyHabitsDetails dailyHabitsDetails in allDailyHabitsDetails) ...[
         EntriesListTileModel(
           isHeader: true,
-          leadingText: Format.date(dailyJobsDetails.date),
-          middleText: Format.currency(dailyJobsDetails.pay),
-          trailingText: Format.hours(dailyJobsDetails.duration),
+          leadingText: Format.date(dailyHabitsDetails.date),
+          middleText: '',
+          trailingText: Format.hours(dailyHabitsDetails.duration),
         ),
-        for (JobDetails jobDuration in dailyJobsDetails.jobsDetails)
+        for (HabitDetails habitDuration in dailyHabitsDetails.habitsDetails)
           EntriesListTileModel(
-            leadingText: jobDuration.name,
-            middleText: Format.currency(jobDuration.pay),
-            trailingText: Format.hours(jobDuration.durationInHours),
+            leadingText: habitDuration.name,
+            middleText: '',
+            trailingText: Format.hours(habitDuration.durationInHours),
           ),
       ]
     ];
@@ -84,14 +79,13 @@ class EntriesService {
 @riverpod
 EntriesService entriesService(Ref ref) {
   return EntriesService(
-    jobsRepository: ref.watch(jobsRepositoryProvider),
+    habitsRepository: ref.watch(habitsRepositoryProvider),
     entriesRepository: ref.watch(entriesRepositoryProvider),
   );
 }
 
 @riverpod
-Stream<List<EntriesListTileModel>> entriesTileModelStream(
-    Ref ref) {
+Stream<List<EntriesListTileModel>> entriesTileModelStream(Ref ref) {
   final user = ref.watch(firebaseAuthProvider).currentUser;
   if (user == null) {
     throw AssertionError('User can\'t be null when fetching entries');

@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/authentication/data/firebase_auth_repository.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/authentication/domain/app_user.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/entry.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/domain/job.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/domain/habit.dart';
 
 part 'entries_repository.g.dart';
 
@@ -19,13 +19,13 @@ class EntriesRepository {
   // create
   Future<void> addEntry({
     required UserID uid,
-    required JobID jobId,
+    required HabitID habitId,
     required DateTime start,
     required DateTime end,
     required String comment,
   }) =>
       _firestore.collection(entriesPath(uid)).add({
-        'jobId': jobId,
+        'habitId': habitId,
         'start': start.millisecondsSinceEpoch,
         'end': end.millisecondsSinceEpoch,
         'comment': comment,
@@ -43,20 +43,20 @@ class EntriesRepository {
       _firestore.doc(entryPath(uid, entryId)).delete();
 
   // read
-  Stream<List<Entry>> watchEntries({required UserID uid, JobID? jobId}) =>
-      queryEntries(uid: uid, jobId: jobId)
+  Stream<List<Entry>> watchEntries({required UserID uid, HabitID? habitId}) =>
+      queryEntries(uid: uid, habitId: habitId)
           .snapshots()
           .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
 
-  Query<Entry> queryEntries({required UserID uid, JobID? jobId}) {
+  Query<Entry> queryEntries({required UserID uid, HabitID? habitId}) {
     Query<Entry> query =
         _firestore.collection(entriesPath(uid)).withConverter<Entry>(
               fromFirestore: (snapshot, _) =>
                   Entry.fromMap(snapshot.data()!, snapshot.id),
               toFirestore: (entry, _) => entry.toMap(),
             );
-    if (jobId != null) {
-      query = query.where('jobId', isEqualTo: jobId);
+    if (habitId != null) {
+      query = query.where('habitId', isEqualTo: habitId);
     }
     return query;
   }
@@ -68,11 +68,11 @@ EntriesRepository entriesRepository(Ref ref) {
 }
 
 @riverpod
-Query<Entry> jobEntriesQuery(Ref ref, String jobId) {
+Query<Entry> habitEntriesQuery(Ref ref, HabitID habitId) {
   final user = ref.watch(firebaseAuthProvider).currentUser;
   if (user == null) {
-    throw AssertionError('User can\'t be null when fetching jobs');
+    throw AssertionError('User can\'t be null when fetching habits');
   }
   final repository = ref.watch(entriesRepositoryProvider);
-  return repository.queryEntries(uid: user.uid, jobId: jobId);
+  return repository.queryEntries(uid: user.uid, habitId: habitId);
 }

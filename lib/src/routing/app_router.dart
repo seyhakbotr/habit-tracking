@@ -6,12 +6,12 @@ import 'package:starter_architecture_flutter_firebase/src/features/authenticatio
 import 'package:starter_architecture_flutter_firebase/src/features/authentication/presentation/custom_sign_in_screen.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/presentation/entries_screen.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/entry.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/domain/job.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/domain/habit.dart'; // Changed from 'jobs' to 'habits'
 import 'package:starter_architecture_flutter_firebase/src/features/entries/presentation/entry_screen/entry_screen.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/presentation/job_entries_screen/job_entries_screen.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/presentation/habit_entries_screen/habit_entries_screen.dart'; // Changed from 'job' to 'habit'
 import 'package:go_router/go_router.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/presentation/edit_job_screen/edit_job_screen.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/presentation/jobs_screen/jobs_screen.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/presentation/edit_habit_screen/edit_habit_screen.dart'; // Changed from 'job' to 'habit'
+import 'package:starter_architecture_flutter_firebase/src/features/habits/presentation/habit_screens/habits_screen.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/onboarding/data/onboarding_repository.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:starter_architecture_flutter_firebase/src/routing/go_router_refresh_stream.dart';
@@ -22,17 +22,18 @@ part 'app_router.g.dart';
 
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _jobsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'jobs');
+final _habitsNavigatorKey = GlobalKey<NavigatorState>(
+    debugLabel: 'habits'); // Changed from 'jobs' to 'habits'
 final _entriesNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'entries');
 final _accountNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'account');
 
 enum AppRoute {
   onboarding,
   signIn,
-  jobs,
-  job,
-  addJob,
-  editJob,
+  habits, // Changed from 'jobs' to 'habits'
+  habit, // Changed from 'job' to 'habit'
+  addHabit, // Changed from 'addJob' to 'addHabit'
+  editHabit, // Changed from 'editJob' to 'editHabit'
   entry,
   addEntry,
   editEntry,
@@ -63,11 +64,11 @@ GoRouter goRouter(Ref ref) {
       final isLoggedIn = authRepository.currentUser != null;
       if (isLoggedIn) {
         if (path.startsWith('/onboarding') || path.startsWith('/signIn')) {
-          return '/jobs';
+          return '/habits';
         }
       } else {
         if (path.startsWith('/onboarding') ||
-            path.startsWith('/jobs') ||
+            path.startsWith('/habits') || // Changed from 'jobs' to 'habits'
             path.startsWith('/entries') ||
             path.startsWith('/account')) {
           return '/signIn';
@@ -99,33 +100,39 @@ GoRouter goRouter(Ref ref) {
         ),
         branches: [
           StatefulShellBranch(
-            navigatorKey: _jobsNavigatorKey,
+            navigatorKey:
+                _habitsNavigatorKey, // Changed from 'jobs' to 'habits'
             routes: [
               GoRoute(
-                path: '/jobs',
-                name: AppRoute.jobs.name,
+                path: '/habits', // Changed from 'jobs' to 'habits'
+                name: AppRoute.habits.name, // Changed from 'jobs' to 'habits'
                 pageBuilder: (context, state) => const NoTransitionPage(
-                  child: JobsScreen(),
+                  child:
+                      HabitsScreen(), // Changed from 'JobsScreen' to 'HabitsScreen'
                 ),
                 routes: [
                   GoRoute(
                     path: 'add',
-                    name: AppRoute.addJob.name,
+                    name: AppRoute
+                        .addHabit.name, // Changed from 'addJob' to 'addHabit'
                     parentNavigatorKey: _rootNavigatorKey,
                     pageBuilder: (context, state) {
                       return const MaterialPage(
                         fullscreenDialog: true,
-                        child: EditJobScreen(),
+                        child:
+                            EditHabitScreen(), // Changed from 'EditJobScreen' to 'EditHabitScreen'
                       );
                     },
                   ),
                   GoRoute(
                     path: ':id',
-                    name: AppRoute.job.name,
+                    name: AppRoute.habit.name, // Changed from 'job' to 'habit'
                     pageBuilder: (context, state) {
                       final id = state.pathParameters['id']!;
                       return MaterialPage(
-                        child: JobEntriesScreen(jobId: id),
+                        child: HabitEntriesScreen(
+                            habitId:
+                                id), // Changed from 'JobEntriesScreen' to 'HabitEntriesScreen'
                       );
                     },
                     routes: [
@@ -134,11 +141,11 @@ GoRouter goRouter(Ref ref) {
                         name: AppRoute.addEntry.name,
                         parentNavigatorKey: _rootNavigatorKey,
                         pageBuilder: (context, state) {
-                          final jobId = state.pathParameters['id']!;
+                          final habitId = state.pathParameters['id']!;
                           return MaterialPage(
                             fullscreenDialog: true,
                             child: EntryScreen(
-                              jobId: jobId,
+                              habitID: habitId,
                             ),
                           );
                         },
@@ -147,12 +154,12 @@ GoRouter goRouter(Ref ref) {
                         path: 'entries/:eid',
                         name: AppRoute.entry.name,
                         pageBuilder: (context, state) {
-                          final jobId = state.pathParameters['id']!;
+                          final habitId = state.pathParameters['id']!;
                           final entryId = state.pathParameters['eid']!;
                           final entry = state.extra as Entry?;
                           return MaterialPage(
                             child: EntryScreen(
-                              jobId: jobId,
+                              habitID: habitId,
                               entryId: entryId,
                               entry: entry,
                             ),
@@ -161,13 +168,18 @@ GoRouter goRouter(Ref ref) {
                       ),
                       GoRoute(
                         path: 'edit',
-                        name: AppRoute.editJob.name,
+                        name: AppRoute.editHabit
+                            .name, // Changed from 'editJob' to 'editHabit'
                         pageBuilder: (context, state) {
-                          final jobId = state.pathParameters['id'];
-                          final job = state.extra as Job?;
+                          final habitId = state.pathParameters['id'];
+                          final habit = state.extra
+                              as Habit?; // Changed from 'Job' to 'Habit'
                           return MaterialPage(
                             fullscreenDialog: true,
-                            child: EditJobScreen(jobId: jobId, job: job),
+                            child: EditHabitScreen(
+                                habitId: habitId,
+                                habit:
+                                    habit), // Changed from 'EditJobScreen' to 'EditHabitScreen' and 'jobId' to 'habitId' and 'job' to 'habit'
                           );
                         },
                       ),

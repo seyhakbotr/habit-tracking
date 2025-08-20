@@ -28,6 +28,8 @@ dependencies:
   riverpod_annotation: ^2.6.1
   force_update_helper: ^0.2.1
   url_launcher: ^6.3.1
+  firebase_ui_oauth_google: ^1.4.2
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -49,3 +51,8 @@ flutter:
   assets:
     - assets/time-tracking.svg
     - assets/habit-tracking.svg
+    - .env
+  fonts:
+    - family: SocialIcons
+      fonts:
+        - asset: packages/firebase_ui_auth/fonts/SocialIcons.ttf

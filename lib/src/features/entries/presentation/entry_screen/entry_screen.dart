@@ -8,14 +8,15 @@ import 'package:starter_architecture_flutter_firebase/src/common_widgets/respons
 import 'package:starter_architecture_flutter_firebase/src/constants/app_sizes.dart';
 import 'package:starter_architecture_flutter_firebase/src/constants/breakpoints.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/entry.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/domain/job.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/domain/habit.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/presentation/entry_screen/entry_screen_controller.dart';
 import 'package:starter_architecture_flutter_firebase/src/utils/async_value_ui.dart';
 import 'package:starter_architecture_flutter_firebase/src/utils/format.dart';
 
 class EntryScreen extends ConsumerStatefulWidget {
-  const EntryScreen({super.key, required this.jobId, this.entryId, this.entry});
-  final JobID jobId;
+  const EntryScreen(
+      {super.key, required this.habitID, this.entryId, this.entry});
+  final HabitID habitID;
   final EntryID? entryId;
   final Entry? entry;
 
@@ -53,7 +54,7 @@ class _EntryPageState extends ConsumerState<EntryScreen> {
     final success =
         await ref.read(entryScreenControllerProvider.notifier).submit(
               entryId: widget.entryId,
-              jobId: widget.jobId,
+              habitId: widget.habitID,
               start: start,
               end: end,
               comment: _comment,

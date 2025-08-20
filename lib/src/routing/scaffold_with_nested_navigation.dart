@@ -108,7 +108,7 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
               NavigationRailDestination(
                 icon: const Icon(Icons.work_outline),
                 selectedIcon: const Icon(Icons.work),
-                label: Text('Jobs'.hardcoded),
+                label: Text('Habits'.hardcoded),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.view_headline_outlined),

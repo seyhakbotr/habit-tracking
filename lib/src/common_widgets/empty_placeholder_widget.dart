@@ -31,7 +31,7 @@ class EmptyPlaceholderWidget extends ConsumerWidget {
                 final isLoggedIn =
                     ref.watch(authRepositoryProvider).currentUser != null;
                 context.goNamed(
-                    isLoggedIn ? AppRoute.jobs.name : AppRoute.signIn.name);
+                    isLoggedIn ? AppRoute.habits.name : AppRoute.signIn.name);
               },
               text: 'Go Home',
             )

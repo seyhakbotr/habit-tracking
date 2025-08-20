@@ -4,37 +4,37 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/data/entries_repository.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/entry.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/domain/job.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/presentation/job_entries_screen/entry_list_item.dart';
-import 'package:starter_architecture_flutter_firebase/src/features/jobs/presentation/job_entries_screen/job_entries_list_controller.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/domain/habit.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/presentation/habit_entries_screen/entry_list_item.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/presentation/habit_entries_screen/habit_entries_list_controller.dart';
 import 'package:starter_architecture_flutter_firebase/src/routing/app_router.dart';
 import 'package:starter_architecture_flutter_firebase/src/utils/async_value_ui.dart';
 
-class JobEntriesList extends ConsumerWidget {
-  const JobEntriesList({super.key, required this.job});
-  final Job job;
+class HabitEntriesList extends ConsumerWidget {
+  const HabitEntriesList({super.key, required this.habit});
+  final Habit habit;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue>(
-      jobsEntriesListControllerProvider,
+      habitsEntriesListControllerProvider,
       (_, state) => state.showAlertDialogOnError(context),
     );
-    final jobEntriesQuery = ref.watch(jobEntriesQueryProvider(job.id));
+    final habitEntriesQuery = ref.watch(habitEntriesQueryProvider(habit.id));
     return FirestoreListView<Entry>(
-      query: jobEntriesQuery,
+      query: habitEntriesQuery,
       itemBuilder: (context, doc) {
         final entry = doc.data();
-        return DismissibleEntryListItem(
+        return DismissibleEntryHabitListItem(
           dismissibleKey: Key('entry-${entry.id}'),
           entry: entry,
-          job: job,
+          habit: habit,
           onDismissed: () => ref
-              .read(jobsEntriesListControllerProvider.notifier)
+              .read(habitsEntriesListControllerProvider.notifier)
               .deleteEntry(entry.id),
           onTap: () => context.goNamed(
             AppRoute.entry.name,
-            pathParameters: {'id': job.id, 'eid': entry.id},
+            pathParameters: {'id': habit.id, 'eid': entry.id},
             extra: entry,
           ),
         );

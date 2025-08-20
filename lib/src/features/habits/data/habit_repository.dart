@@ -24,10 +24,16 @@ class HabitsRepository {
   Future<void> addHabit(
           {required UserID uid,
           required String name,
-          required int dailyGoal}) =>
+          required int dailyGoal,
+          DateTime? lastCompleted,
+          int? streak,
+          int? color}) =>
       _firestore.collection(habitsPath(uid)).add({
         'name': name,
         'dailyGoal': dailyGoal,
+        'lastCompleted': lastCompleted,
+        'streak': streak,
+        'color': color,
       });
 
   // update

@@ -7,7 +7,7 @@ part of 'entry_screen_controller.dart';
 // **************************************************************************
 
 String _$entryScreenControllerHash() =>
-    r'75638e7eac6bacd498349a143fc5fc827171674a';
+    r'519bbf30c4728bdb5ba49a255560965a1d5ae20b';
 
 /// See also [EntryScreenController].
 @ProviderFor(EntryScreenController)
