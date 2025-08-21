@@ -57,6 +57,28 @@ class HabitsRepository {
     await habitRef.delete();
   }
 
+  Future<void> incrementHabitStreak({
+    required UserID uid,
+    required HabitID habitId,
+  }) async {
+    final habitDoc = _firestore.doc(habitPath(uid, habitId));
+
+    await _firestore.runTransaction((transaction) async {
+      final habitSnapshot = await transaction.get(habitDoc);
+
+      if (habitSnapshot.exists) {
+        final habitData = habitSnapshot.data() as Map<String, dynamic>;
+        final currentStreak = habitData['streak'] ?? 0;
+        final now = DateTime.now();
+
+        transaction.update(habitDoc, {
+          'streak': currentStreak + 1,
+          'lastCompleted': now,
+        });
+      }
+    });
+  }
+
   // read
   Stream<Habit> watchHabit({required UserID uid, required HabitID habitId}) =>
       _firestore

@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/authentication/data/firebase_auth_repository.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/data/entries_repository.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/entries/domain/entry.dart';
+import 'package:starter_architecture_flutter_firebase/src/features/habits/data/habit_repository.dart';
 import 'package:starter_architecture_flutter_firebase/src/features/habits/domain/habit.dart';
 
 part 'entry_screen_controller.g.dart';
@@ -47,6 +48,23 @@ class EntryScreenController extends _$EntryScreenController {
       state = await AsyncValue.guard(
           () => repository.updateEntry(uid: currentUser.uid, entry: entry));
     }
+    return state.hasError == false;
+  }
+
+  Future<bool> incrementStreak(HabitID habitId) async {
+    final currentUser = ref.read(authRepositoryProvider).currentUser;
+    if (currentUser == null) {
+      throw AssertionError('User can\'t be null');
+    }
+
+    final repository = ref.read(habitsRepositoryProvider);
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() => repository.incrementHabitStreak(
+          uid: currentUser.uid,
+          habitId: habitId,
+        ));
+
     return state.hasError == false;
   }
 }
