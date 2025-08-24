@@ -31,7 +31,7 @@ class HabitEntriesList extends ConsumerWidget {
           habit: habit,
           onDismissed: () => ref
               .read(habitsEntriesListControllerProvider.notifier)
-              .deleteEntry(entry.id),
+              .deleteEntry(entry.id, habit.id),
           onTap: () => context.goNamed(
             AppRoute.entry.name,
             pathParameters: {'id': habit.id, 'eid': entry.id},

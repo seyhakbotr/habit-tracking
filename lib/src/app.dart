@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:force_update_helper/force_update_helper.dart';
+import 'package:starter_architecture_flutter_firebase/l10n/app_localizations.dart';
+import 'package:starter_architecture_flutter_firebase/src/localization/locale_provider.dart';
 import 'package:starter_architecture_flutter_firebase/src/routing/app_router.dart';
 import 'package:starter_architecture_flutter_firebase/src/routing/app_startup.dart';
 import 'package:starter_architecture_flutter_firebase/src/routing/go_router_delegate_listener.dart';
@@ -17,22 +19,22 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
+    final locale = ref.watch(localeProvider); // Watch the locale provider
+
     return MaterialApp.router(
       routerConfig: goRouter,
+      // Add the locale property here
+      locale: locale,
+      // The rest of your code remains the same
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       builder: (_, child) {
-        // * Important: Use AppStartupWidget to wrap ForceUpdateWidget otherwise you will get this error:
-        // * Navigator operation requested with a context that does not include a Navigator.
-        // * The context used to push or pop routes from the Navigator must be that of a widget that is a descendant of a Navigator widget.
         return AppStartupWidget(
           onLoaded: (_) => ForceUpdateWidget(
             navigatorKey: goRouter.routerDelegate.navigatorKey,
             forceUpdateClient: ForceUpdateClient(
-              // * Real apps should fetch this from an API endpoint or via
-              // * Firebase Remote Config
               fetchRequiredVersion: () => Future.value('2.0.0'),
-              // * Example ID from this app: https://fluttertips.dev/
-              // * To avoid mistakes, store the ID as an environment variable and
-              // * read it with String.fromEnvironment
               iosAppStoreId: '6482293361',
             ),
             allowCancel: false,
@@ -47,7 +49,6 @@ class MyApp extends ConsumerWidget {
               if (await canLaunchUrl(storeUrl)) {
                 await launchUrl(
                   storeUrl,
-                  // * Open app store app directly (or fallback to browser)
                   mode: LaunchMode.externalApplication,
                 );
               } else {

@@ -1,0 +1,20 @@
+{
+  "ok": "យល់ព្រម",
+  "cancel": "បោះបង់",
+  "logout": "ចាកចេញ",
+  "logoutAreYouSure": "តើអ្នកប្រាកដថាចង់ចាកចេញមែនទេ?",
+  "logoutFailed": "ការចាកចេញបានបរាជ័យ",
+  "signIn": "ចូលប្រើ",
+  "signInWithEmailPassword": "ចូលប្រើជាមួយអ៊ីមែលនិងពាក្យសម្ងាត់",
+  "goAnonymous": "ចូលប្រើដោយមិនបញ្ចេញឈ្មោះ",
+  "or": "ឬ",
+  "signInFailed": "ការចូលប្រើបានបរាជ័យ",
+  "homePage": "ទំព័រដើម",
+  "jobs": "ការងារ",
+  "entries": "ធាតុ",
+  "account": "គណនី",
+  "accountPage": "ទំព័រគណនី",
+  "habits": "ទម្លាប់",
+  "appTitle": "ការតាមដានទម្លាប់",
+  "profile" : "ប្រវត្តិរូប"
+}

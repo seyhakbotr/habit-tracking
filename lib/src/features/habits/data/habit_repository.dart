@@ -79,6 +79,29 @@ class HabitsRepository {
     });
   }
 
+  Future<void> decrementHabitStreak({
+    required UserID uid,
+    required HabitID habitId,
+  }) async {
+    final habitDoc = _firestore.doc(habitPath(uid, habitId));
+
+    await _firestore.runTransaction((transaction) async {
+      final habitSnapshot = await transaction.get(habitDoc);
+
+      if (habitSnapshot.exists) {
+        final habitData = habitSnapshot.data() as Map<String, dynamic>;
+        final currentStreak = habitData['streak'] ?? 0;
+        final newStreak = currentStreak > 0 ? currentStreak - 1 : 0;
+        final now = DateTime.now();
+
+        transaction.update(habitDoc, {
+          'streak': newStreak,
+          'lastCompleted': now,
+        });
+      }
+    });
+  }
+
   // read
   Stream<Habit> watchHabit({required UserID uid, required HabitID habitId}) =>
       _firestore

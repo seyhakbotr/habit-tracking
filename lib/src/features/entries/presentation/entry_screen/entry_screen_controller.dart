@@ -27,44 +27,76 @@ class EntryScreenController extends _$EntryScreenController {
     if (currentUser == null) {
       throw AssertionError('User can\'t be null');
     }
-    final repository = ref.read(entriesRepositoryProvider);
+    final entriesRepository = ref.read(entriesRepositoryProvider);
+    final habitsRepository = ref.read(habitsRepositoryProvider);
+
     state = const AsyncLoading();
-    if (entryId == null) {
-      state = await AsyncValue.guard(() => repository.addEntry(
-            uid: currentUser.uid,
-            habitId: habitId,
-            start: start,
-            end: end,
-            comment: comment,
-          ));
-    } else {
-      final entry = Entry(
-        id: entryId,
-        habitId: habitId,
-        start: start,
-        end: end,
-        comment: comment,
-      );
-      state = await AsyncValue.guard(
-          () => repository.updateEntry(uid: currentUser.uid, entry: entry));
+
+    try {
+      if (entryId == null) {
+        // Step 1: Add the new entry to Firestore
+        await entriesRepository.addEntry(
+          uid: currentUser.uid,
+          habitId: habitId,
+          start: start,
+          end: end,
+          comment: comment,
+        );
+
+        // Step 2: After the entry is successfully added, increment the habit streak
+        await habitsRepository.incrementHabitStreak(
+          uid: currentUser.uid,
+          habitId: habitId,
+        );
+      } else {
+        final entry = Entry(
+          id: entryId,
+          habitId: habitId,
+          start: start,
+          end: end,
+          comment: comment,
+        );
+        await entriesRepository.updateEntry(uid: currentUser.uid, entry: entry);
+      }
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
     }
-    return state.hasError == false;
   }
 
-  Future<bool> incrementStreak(HabitID habitId) async {
+  Future<bool> deleteEntry({
+    required EntryID entryId,
+    required HabitID habitId,
+  }) async {
     final currentUser = ref.read(authRepositoryProvider).currentUser;
     if (currentUser == null) {
       throw AssertionError('User can\'t be null');
     }
+    final entriesRepository = ref.read(entriesRepositoryProvider);
+    final habitsRepository = ref.read(habitsRepositoryProvider);
 
-    final repository = ref.read(habitsRepositoryProvider);
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() => repository.incrementHabitStreak(
-          uid: currentUser.uid,
-          habitId: habitId,
-        ));
+    try {
+      // Step 1: Delete the entry from Firestore
+      await entriesRepository.deleteEntry(
+        uid: currentUser.uid,
+        entryId: entryId,
+      );
 
-    return state.hasError == false;
+      // Step 2: After the entry is successfully deleted, decrement the habit streak
+      await habitsRepository.decrementHabitStreak(
+        uid: currentUser.uid,
+        habitId: habitId,
+      );
+
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 }
