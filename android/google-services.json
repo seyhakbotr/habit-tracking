@@ -12,7 +12,20 @@
           "package_name": "com.example.habit_tracker"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "153967553903-5depgipkk14ebm9huemvke7jm0jag6n1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.habit_tracker",
+            "certificate_hash": "7850125582316d5f91f4dde3492915d126c03bee"
+          }
+        },
+        {
+          "client_id": "153967553903-ue6kt9a266fj1sjrhql6tep3klt466c9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC1tIJAhG8EtWg99SsXxR1K0TxvRIqNuQY"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "153967553903-ue6kt9a266fj1sjrhql6tep3klt466c9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "153967553903-9961dt8bsvek9l11nv0lcae0qjt993ia.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.starterArchitectureFlutterFirebase"
+              }
+            }
+          ]
         }
       }
     }
